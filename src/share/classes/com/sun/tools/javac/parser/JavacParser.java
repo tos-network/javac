@@ -155,8 +155,10 @@ public class JavacParser implements Parser {
         this.allowDiamond = source.allowDiamond();
         this.allowMulticatch = source.allowMulticatch();
         this.allowStringFolding = fac.options.getBoolean("allowStringFolding", true);
-        this.allowLambda = source.allowLambda();
-        this.allowMethodReferences = source.allowMethodReferences();
+        // TERMINOS MODIFICATION: Lambda expressions disabled for deterministic computation
+        this.allowLambda = false;
+        // TERMINOS MODIFICATION: Method references disabled for deterministic computation
+        this.allowMethodReferences = false;
         this.allowDefaultMethods = source.allowDefaultMethods();
         this.allowStaticInterfaceMethods = source.allowStaticInterfaceMethods();
         this.allowIntersectionTypesInCast = source.allowIntersectionTypesInCast();
@@ -1744,30 +1746,27 @@ public class JavacParser implements Parser {
     }
 
     JCExpression lambdaExpressionOrStatement(boolean hasParens, boolean explicitParams, int pos) {
-        List<JCVariableDecl> params = explicitParams ?
-                formalParameters(true) :
-                implicitParameters(hasParens);
-
-        return lambdaExpressionOrStatementRest(params, pos);
+        // TERMINOS MODIFICATION: Lambda expressions disabled for deterministic computation
+        log.error(pos, "lambda.not.allowed");
+        return syntaxError(pos, null, "lambda.expressions.not.supported");
     }
 
     JCExpression lambdaExpressionOrStatementRest(List<JCVariableDecl> args, int pos) {
-        checkLambda();
-        accept(ARROW);
-
-        return token.kind == LBRACE ?
-            lambdaStatement(args, pos, pos) :
-            lambdaExpression(args, pos);
+        // TERMINOS MODIFICATION: Lambda expressions disabled for deterministic computation
+        log.error(pos, "lambda.not.allowed");
+        return syntaxError(pos, null, "lambda.expressions.not.supported");
     }
 
     JCExpression lambdaStatement(List<JCVariableDecl> args, int pos, int pos2) {
-        JCBlock block = block(pos2, 0);
-        return toP(F.at(pos).Lambda(args, block));
+        // TERMINOS MODIFICATION: Lambda expressions disabled for deterministic computation
+        log.error(pos, "lambda.not.allowed");
+        return syntaxError(pos, null, "lambda.expressions.not.supported");
     }
 
     JCExpression lambdaExpression(List<JCVariableDecl> args, int pos) {
-        JCTree expr = parseExpression();
-        return toP(F.at(pos).Lambda(args, expr));
+        // TERMINOS MODIFICATION: Lambda expressions disabled for deterministic computation
+        log.error(pos, "lambda.not.allowed");
+        return syntaxError(pos, null, "lambda.expressions.not.supported");
     }
 
     /** SuperSuffix = Arguments | "." [TypeArguments] Ident [Arguments]
@@ -2037,28 +2036,15 @@ public class JavacParser implements Parser {
      */
     JCExpression memberReferenceSuffix(JCExpression t) {
         int pos1 = token.pos;
-        accept(COLCOL);
-        return memberReferenceSuffix(pos1, t);
+        // TERMINOS MODIFICATION: Method references disabled for deterministic computation
+        log.error(pos1, "method.references.not.allowed");
+        return syntaxError(pos1, null, "method.references.not.supported");
     }
 
     JCExpression memberReferenceSuffix(int pos1, JCExpression t) {
-        checkMethodReferences();
-        mode = EXPR;
-        List<JCExpression> typeArgs = null;
-        if (token.kind == LT) {
-            typeArgs = typeArguments(false);
-        }
-        Name refName;
-        ReferenceMode refMode;
-        if (token.kind == NEW) {
-            refMode = ReferenceMode.NEW;
-            refName = names.init;
-            nextToken();
-        } else {
-            refMode = ReferenceMode.INVOKE;
-            refName = ident();
-        }
-        return toP(F.at(t.getStartPosition()).Reference(refMode, refName, t, typeArgs));
+        // TERMINOS MODIFICATION: Method references disabled for deterministic computation
+        log.error(pos1, "method.references.not.allowed");
+        return syntaxError(pos1, null, "method.references.not.supported");
     }
 
     /** Creator = [Annotations] Qualident [TypeArguments] ( ArrayCreatorRest | ClassCreatorRest )

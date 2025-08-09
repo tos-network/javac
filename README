@@ -40,6 +40,6 @@ ant -Dboot.java.home=$BOOT_JAVA_HOME build-javac
 Build Output:
 ```bash
 # Compiled javac binary
-./build/bin/javac
-./build/lib/javac.jar
+./dist/bin/javac
+./dist/lib/javac.jar
 ```
