@@ -1743,7 +1743,7 @@ public class LambdaToMethod extends TreeTranslator {
          * This class is used to store important information regarding translation of
          * lambda expression/method references (see subclasses).
          */
-        private abstract class TranslationContext<T extends JCFunctionalExpression> {
+        abstract class TranslationContext<T extends JCFunctionalExpression> {
 
             /** the underlying (untranslated) tree */
             final T tree;
@@ -1822,7 +1822,7 @@ public class LambdaToMethod extends TreeTranslator {
          * and the used by the main translation routines in order to adjust references
          * to captured locals/members, etc.
          */
-        private class LambdaTranslationContext extends TranslationContext<JCLambda> {
+        class LambdaTranslationContext extends TranslationContext<JCLambda> {
 
             /** variable in the enclosing context to which this lambda is assigned */
             final Symbol self;
@@ -2149,7 +2149,7 @@ public class LambdaToMethod extends TreeTranslator {
          * and the used by the main translation routines in order to adjust method
          * references (i.e. in case a bridge is needed)
          */
-        private final class ReferenceTranslationContext extends TranslationContext<JCMemberReference> {
+        final class ReferenceTranslationContext extends TranslationContext<JCMemberReference> {
 
             final boolean isSuper;
             final Symbol sigPolySym;
