@@ -18,7 +18,7 @@ brew install ant
 # 3. Set the path to your JDK 8 installation
 export BOOT_JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home
 
-# 4. Build javac only
+# 4. Build javac bootstrap 
 cd make
 ant -Dboot.java.home=$BOOT_JAVA_HOME build-bootstrap-javac
 ```
@@ -30,4 +30,16 @@ Build Output:
 
 # javac.jar containing the compiler logic
 ./build/bootstrap/lib/javac.jar
+```
+
+# 5. Build javac 
+cd make
+ant -Dboot.java.home=$BOOT_JAVA_HOME build-javac
+```
+
+Build Output:
+```bash
+# Compiled javac binary
+./build/bin/javac
+./build/lib/javac.jar
 ```
